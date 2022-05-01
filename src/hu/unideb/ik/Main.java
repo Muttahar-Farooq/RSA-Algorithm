@@ -108,7 +108,7 @@ public class Main {
 
         BigInteger d = eea[1].mod(phi);
 
-        return new BigInteger[]{n, e, d};
+        return new BigInteger[]{n, e, d, p, q};
     }
 
     static String rsaEncrypt(String message, BigInteger n, BigInteger e){
@@ -127,6 +127,25 @@ public class Main {
             message.append((char) fast_mod_pow(new BigInteger(c), d, n).intValue());
         }
         return message.toString();
+    }
+
+    static String rsaDecryptCHA(String cipher, BigInteger n, BigInteger d, BigInteger p, BigInteger q){
+        StringBuilder message = new StringBuilder();
+        String[] cipherChars = cipher.split(" ");
+        BigInteger dp = d.mod(p.subtract(bigOne));
+        BigInteger dq = d.mod(q.subtract(bigOne));
+        BigInteger[] eea = extended_euclidean(p,q);
+        BigInteger mp;
+        BigInteger mq;
+        BigInteger cInt;
+        for(String c:cipherChars){
+            cInt = new BigInteger(c);
+            mp = fast_mod_pow(cInt,dp,p);
+            mq = fast_mod_pow(cInt,dq,q);
+            message.append((char) mp.multiply(eea[2]).multiply(q).add(mq.multiply(eea[1]).multiply(p)).mod(n).intValue());
+        }
+        return message.toString();
+
     }
 
     static BigInteger randomBigInteger(BigInteger upperLimit){
@@ -192,7 +211,8 @@ public class Main {
         System.out.println("cipher=\n"+cipher);
 
         //=====================Decryption=====================
-        String decryptedMessage = rsaDecrypt(cipher,RSAkeys[0],RSAkeys[2]);
+        //String decryptedMessage = rsaDecrypt(cipher,RSAkeys[0],RSAkeys[2]);
+        String decryptedMessage = rsaDecryptCHA(cipher,RSAkeys[0],RSAkeys[2],RSAkeys[3],RSAkeys[4]);
         System.out.println("decrypted message=\n"+decryptedMessage);
 //======================================================================================
 
