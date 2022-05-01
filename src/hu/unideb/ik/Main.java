@@ -174,7 +174,7 @@ public class Main {
 
 //===============================RSA Algorithm===================================
         //====================Generating Keys===============
-        BigInteger[] RSAkeys = rsaKeysGenerator(32,8,primes);  //generates 1024 bits long prime numbers
+        BigInteger[] RSAkeys = rsaKeysGenerator(1024,4,primes);  //generates 1024 bits long prime numbers
         System.out.println("private key =("+RSAkeys[2]+","+RSAkeys[0]+")");    //private key
         System.out.println("public key =("+RSAkeys[1]+","+RSAkeys[0]+")");    //public key
 
@@ -186,12 +186,7 @@ public class Main {
         there are more composite numbers than prime numbers and with miller-rabin it’s super costly\040
         to tell about a composite number that it’s composite. One way is to do some tests before\040
         you would do miller-rabin. For example simply check with some small numbers if they divide\040
-        your picked random number. In practice for example if you make a list of the first 100\040
-        primes: 2, 3, 5, 7, ….. and you do a quick check (sieving) if any of these primes divide your\040
-        picked random number, you can quickly tell about a lot of composite numbers that they are composite.\040
-        If your picked number is not divided by any of those, it has a much better chance being a prime, so\040
-        you can go on with the miller-rabin tests. (Typically for the sieving we are using all the primes\040
-        under 10^6.
+        your picked random number.
         """;
         String cipher = rsaEncrypt(message,RSAkeys[0],RSAkeys[1]);
         System.out.println("cipher=\n"+cipher);
