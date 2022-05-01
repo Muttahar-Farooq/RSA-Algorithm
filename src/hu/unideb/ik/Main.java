@@ -28,7 +28,7 @@ public class Main {
     static BigInteger fast_mod_pow(BigInteger a, BigInteger b, BigInteger m){
         BigInteger x = bigOne;
 //        long y=a;
-        while(b.compareTo(bigZero)==1){
+        while(b.compareTo(bigZero) > 0){
             if(b.mod(bigTwo).equals(bigOne)){
                 x=x.multiply(a).mod(m);
             }
@@ -72,11 +72,11 @@ public class Main {
 
     static boolean multiMiilerTest(BigInteger p, int k,ArrayList<Integer> primes){
         BigInteger bigPrime;
-        for(int i=0; i< primes.size(); i++){
-            bigPrime = BigInteger.valueOf(primes.get(i));
-            if(p.mod(bigPrime).equals(bigZero))
+        for (Integer prime : primes) {
+            bigPrime = BigInteger.valueOf(prime);
+            if (p.mod(bigPrime).equals(bigZero))
                 return false;
-            if(bigPrime.compareTo(p.sqrt())>0)
+            if (bigPrime.compareTo(p.sqrt()) > 0)
                 break;
         }
 
@@ -112,21 +112,21 @@ public class Main {
     }
 
     static String rsaEncrypt(String message, BigInteger n, BigInteger e){
-        String cipher = "";
+        StringBuilder cipher = new StringBuilder();
         for (int i=0; i<message.length(); i++){
             int m = message.charAt(i);
-            cipher += fast_mod_pow(BigInteger.valueOf(m),e,n) + " ";
+            cipher.append(fast_mod_pow(BigInteger.valueOf(m), e, n)).append(" ");
         }
-        return cipher;
+        return cipher.toString();
     }
 
     static String rsaDecrypt(String cipher, BigInteger n, BigInteger d){
-        String message = "";
+        StringBuilder message = new StringBuilder();
         String[] cipherChars = cipher.split(" ");
         for(String c:cipherChars){
-            message += (char)fast_mod_pow(new BigInteger(c),d,n).intValue();
+            message.append((char) fast_mod_pow(new BigInteger(c), d, n).intValue());
         }
-        return message;
+        return message.toString();
     }
 
     static BigInteger randomBigInteger(BigInteger upperLimit){
@@ -174,7 +174,7 @@ public class Main {
 
 //===============================RSA Algorithm===================================
         //====================Generating Keys===============
-        BigInteger[] RSAkeys = rsaKeysGenerator(1024,8,primes);  //generates 1024 bits long prime numbers
+        BigInteger[] RSAkeys = rsaKeysGenerator(32,8,primes);  //generates 1024 bits long prime numbers
         System.out.println("private key =("+RSAkeys[2]+","+RSAkeys[0]+")");    //private key
         System.out.println("public key =("+RSAkeys[1]+","+RSAkeys[0]+")");    //public key
 
@@ -191,14 +191,14 @@ public class Main {
         picked random number, you can quickly tell about a lot of composite numbers that they are composite.\040
         If your picked number is not divided by any of those, it has a much better chance being a prime, so\040
         you can go on with the miller-rabin tests. (Typically for the sieving we are using all the primes\040
-        under 10^6.)
+        under 10^6.
         """;
         String cipher = rsaEncrypt(message,RSAkeys[0],RSAkeys[1]);
-        System.out.println("cipher="+cipher);
+        System.out.println("cipher=\n"+cipher);
 
         //=====================Decryption=====================
         String decryptedMessage = rsaDecrypt(cipher,RSAkeys[0],RSAkeys[2]);
-        System.out.println("decrypted message="+decryptedMessage);
+        System.out.println("decrypted message=\n"+decryptedMessage);
 //======================================================================================
 
     }
